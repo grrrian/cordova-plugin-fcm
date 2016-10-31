@@ -40,6 +40,13 @@ static FCMPlugin *fcmPluginInstance;
 - (void) getToken:(CDVInvokedUrlCommand *)command 
 {
     NSLog(@"get Token");
+    
+    // Only register for notifications when the client calls getToken
+    UIUserNotificationType allNotificationTypes = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+    UIUserNotificationSettings *settings =  [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    
     [self.commandDelegate runInBackground:^{
         NSString* token = [[FIRInstanceID instanceID] token];
         CDVPluginResult* pluginResult = nil;
