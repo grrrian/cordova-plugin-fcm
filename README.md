@@ -3,6 +3,10 @@
 
 >[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
 
+#### Version 1.1.6 (10/31/2016)
+- Only request for notification permission on iOS after client calls getToken.
+- Clear the badge on app open.
+
 #### Version 1.1.5 (10/10/2016)
 - iOS10 ready
 - Android and iOS tested.
