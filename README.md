@@ -1,7 +1,8 @@
-# Google Firebase Cloud Messaging Cordova Push Plugin
-> Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
+# Firebase Cloud Messaging Cordova Push Plugin
+> Push notification plugin for Cordova applications with Google Firebase FCM.
 
->[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
+#### Version 1.2.0 (10/31/2016)
+Add Firebase Performance Montiforing framework.
 
 #### Version 1.1.6 (10/31/2016)
 - Only request for notification permission on iOS after client calls getToken.
