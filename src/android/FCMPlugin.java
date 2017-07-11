@@ -76,7 +76,7 @@ public class FCMPlugin extends CordovaPlugin {
                   Log.d(TAG, "success: verifyPhoneNumber.onVerificationCompleted");
 
                   // Sign in natively and give a token back to allow sign in javascript.
-				          FirebaseAuth.getInstance().signInWithCredential(credential)
+                  FirebaseAuth.getInstance().signInWithCredential(credential)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                       @Override
                       public void onComplete(Task<AuthResult> task) {
