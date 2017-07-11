@@ -144,9 +144,9 @@ Send a push notification to a single device or topic.
 
 You can use this plugin to request an SMS code to be sent to a given phone number. You can then use this code in conjuction with the verification ID returned from the plugin to authenticate on the javascript side.
 
-In some cases, Android may do instant verification or auto-retrieval. In which case, we return a token instead of a verification ID.
+In some cases, Android may do instant verification or auto-retrieval. In those cases, we return a token instead of a verification ID.
 
-#### Receiving push notification data
+#### Verifying a phone number
 Calling FCMPlugin.getVerificationID will return an object containing either `id` or `token`.
 
 ```javascript
