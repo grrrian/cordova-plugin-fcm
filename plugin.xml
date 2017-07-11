@@ -19,13 +19,13 @@
 -->
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-fcm"
-      version="1.1.6">
+      version="1.2.0">
     <name>FCMPlugin</name>
     <description>Cordova FCM Plugin</description>
     <license>Apache 2.0</license>
-    <keywords>cordova, fcm, push, plugin</keywords>
+    <keywords>cordova, fcm, push, plugin, phone auth</keywords>
     
-    <info>Cordova FCM plugin</info>
+    <info>Cordova FCM and Phone Auth plugin</info>
 	
     <js-module src="www/FCMPlugin.js" name="FCMPlugin">
 	<clobbers target="FCMPlugin" />

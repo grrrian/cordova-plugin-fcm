@@ -1,13 +1,17 @@
+cordova.define("cordova-plugin-fcm.FCMPlugin", function(require, exports, module) {
 var exec = require('cordova/exec');
 
-function FCMPlugin() { 
+function FCMPlugin() {
 	console.log("FCMPlugin.js: is created");
 }
 
 
 
 
-
+// GET VERIFICATION ID //
+FCMPlugin.prototype.getVerificationID = function( phoneNumber, success, error ){
+  exec(success, error, "FCMPlugin", 'getVerificationID', [phoneNumber]);
+}
 // GET TOKEN //
 FCMPlugin.prototype.getToken = function( success, error ){
 	exec(success, error, "FCMPlugin", 'getToken', []);
@@ -39,3 +43,5 @@ exec(function(result){ console.log("FCMPlugin Ready OK") }, function(result){ co
 
 var fcmPlugin = new FCMPlugin();
 module.exports = fcmPlugin;
+
+});

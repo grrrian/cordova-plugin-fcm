@@ -1,7 +1,8 @@
-# Google Firebase Cloud Messaging Cordova Push Plugin
-> Extremely easy plug&play push notification plugin for Cordova applications with Google Firebase FCM.
+# Firebase Cloud Messaging and Phone Auth Cordova Plugin
+> Use this Cordova plugin to receive push notifications through FCM or to sign in using Phone Auth.
 
->[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VF654BMGUPQTJ)
+#### Version 1.2.0 (07/11/2017)
+- Added Phone Auth support for Android and iOS.
 
 #### Version 1.1.6 (10/31/2016)
 - Only request for notification permission on iOS after client calls getToken.
@@ -14,10 +15,9 @@
 - Added data payload parameter to check whether the user tapped on the notification or was received in foreground.
 - **Free testing server available for free! https://cordova-plugin-fcm.appspot.com**
 
-##Installation
+## Installation
 ```Bash
-cordova plugin add cordova-plugin-fcm
-
+cordova plugin add https://github.com/grrrian/cordova-plugin-fcm.git --save
 ```
 
 #### Firebase configuration
@@ -40,16 +40,18 @@ If you do not set this resource, then the SDK will use the default icon for your
 Put your generated file 'GoogleService-Info.plist' in the project root folder.
 
 
-##Usage
+## FCM
 
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
-####Get token
+#### Get token
 
 ```javascript
-//FCMPlugin.getToken( successCallback(token), errorCallback(err) );
-//Keep in mind the function will return null if the token has not been established yet.
+// FCMPlugin.getToken( successCallback(token), errorCallback(err) );
+// Keep in mind the function will return null if the token has not been established yet.
+
+// On device ready...
 FCMPlugin.getToken(
   function(token){
     alert(token);
@@ -60,31 +62,36 @@ FCMPlugin.getToken(
 )
 ```
 
-####Subscribe to topic
+#### Subscribe to topic
 
 ```javascript
-//FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
-//All devices are subscribed automatically to 'all' and 'ios' or 'android' topic respectively.
-//Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
+// FCMPlugin.subscribeToTopic( topic, successCallback(msg), errorCallback(err) );
+// Must match the following regular expression: "[a-zA-Z0-9-_.~%]{1,900}".
+
+// On device ready...
 FCMPlugin.subscribeToTopic('topicExample');
 ```
 
 ####Unsubscribe from topic
 
 ```javascript
-//FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
+// FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
+
+// On device ready...
 FCMPlugin.unsubscribeFromTopic('topicExample');
 ```
 
-####Receiving push notification data
+#### Receiving push notification data
 
 ```javascript
-//FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
-//Here you define your application behaviour based on the notification data.
+// FCMPlugin.onNotification( onNotificationCallback(data), successCallback(msg), errorCallback(err) )
+// Here you define your application behaviour based on the notification data.
+
+// On device ready...
 FCMPlugin.onNotification(
   function(data){
     if(data.wasTapped){
-      //Notification was received on device tray and tapped by the user.
+      //Notification was received on device tray (background) and tapped by the user.
       alert( JSON.stringify(data) );
     }else{
       //Notification was received in foreground. Maybe the user needs to be notified.
@@ -100,7 +107,7 @@ FCMPlugin.onNotification(
 );
 ```
 
-####Send notification. Payload example (REST API)
+#### Send notification. Payload example (REST API)
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
@@ -124,7 +131,7 @@ Free testing server: https://cordova-plugin-fcm.appspot.com
     "restricted_package_name":"" //Optional. Set for application filtering
 }
 ```
-##How it works
+#### How it works
 Send a push notification to a single device or topic.
 - 1.a Application is in foreground:
  - The user receives the notification data in the JavaScript callback without notification alert message (this is the normal behaviour of mobile push notifications).
@@ -132,6 +139,38 @@ Send a push notification to a single device or topic.
  - The user receives the notification message in its device notification bar.
  - The user taps the notification and the application is opened.
  - The user receives the notification data in the JavaScript callback'.
+
+## Phone Auth
+
+You can use this plugin to request an SMS code to be sent to a given phone number. You can then use this code in conjuction with the verification ID returned from the plugin to authenticate on the javascript side.
+
+In some cases, Android may do instant verification or auto-retrieval. In which case, we return a token instead of a verification ID.
+
+#### Receiving push notification data
+Calling FCMPlugin.getVerificationID will return an object containing either `id` or `token`.
+
+```javascript
+// FCMPlugin.getVerificationID( phoneNumber, successCallback(msg), errorCallback(err) )
+
+// On device ready...
+FCMPlugin.getVerificationID('+19025551234' // user's phone number
+  function(verification) {
+    if (verification.id) {
+      // An SMS with a 6-digit code is sent to the phone number
+      var smsCode = getCodeFromUI(); // code as string
+      var credential = firebase.auth.PhoneAuthProvider.credential(verification.id, smsCode);
+      firebase.auth().signInWithCredential(credential);
+    } else if (verification.token) {
+      // The code was automatically processed by Android. Use the token of the natively signed-in user to generate a sign-in token on your server.
+      var customToken = generateCustomTokenFromSignedInToken(verification.token);
+      firebase.auth().signInWithCustomToken(customToken);
+    }
+  },
+  function(err){
+    console.log('Error verifying phone number: ' + err);
+  }
+);
+```
 
 ##License
 ```
