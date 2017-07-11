@@ -59,7 +59,7 @@ public class FCMPlugin extends CordovaPlugin {
       }
       // GET VERIFICATION ID //
       else if (action.equals("getVerificationID")) {
-        cordova.getActivity().runOnUiThread(new Runnable() {
+        cordova.getThreadPool().execute(new Runnable() {
           public void run() {
             try{
               String number = args.getString(0);
@@ -73,7 +73,7 @@ public class FCMPlugin extends CordovaPlugin {
                   // 2 - Auto-retrieval. On some devices Google Play services can automatically
                   //     detect the incoming verification SMS and perform verificaiton without
                   //     user action.
-                  Log.d(TAG, "success: verifyPhoneNumber.onVerificationCompleted - doing nothing. sign in with token from onCodeSent");
+                  Log.d(TAG, "success: verifyPhoneNumber.onVerificationCompleted");
 
                   // Sign in natively and give a token back to allow sign in javascript.
 				          FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -192,7 +192,7 @@ public class FCMPlugin extends CordovaPlugin {
           }
         });
       }
-      // UN/SUBSCRIBE TOPICS //
+      // UNSUBSCRIBE TOPICS //
       else if (action.equals("subscribeToTopic")) {
         cordova.getThreadPool().execute(new Runnable() {
           public void run() {
