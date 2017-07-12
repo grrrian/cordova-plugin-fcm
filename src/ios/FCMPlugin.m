@@ -36,6 +36,40 @@ static FCMPlugin *fcmPluginInstance;
     
 }
 
+// GET VERIFICATION ID //
+- (void) getVerificationID:(CDVInvokedUrlCommand *)command
+{
+    NSLog(@"get Verification ID");
+    NSString* number = [command.arguments objectAtIndex:0];
+    
+    [[FIRPhoneAuthProvider provider]
+     verifyPhoneNumber:number
+     completion:^(NSString *_Nullable verificationID,
+                  NSError *_Nullable error) {
+         NSDictionary *message;
+         if (error) {
+             // Verification code not sent.
+             message = @{
+                         @"code": [NSNumber numberWithInteger:error.code],
+                         @"description": error.description == nil ? [NSNull null] : error.description
+                        };
+             
+             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:message];
+             
+             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+         } else {
+             // Successful.
+             NSLog(@"Success verifying ID!");
+             message = @{
+                          @"id": verificationID
+                        };
+             
+             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
+             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+         }
+     }];
+}
+
 // GET TOKEN //
 - (void) getToken:(CDVInvokedUrlCommand *)command 
 {
