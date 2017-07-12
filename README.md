@@ -45,6 +45,15 @@ Put your generated file 'GoogleService-Info.plist' in the project root folder.
 :warning: It's highly recommended to use REST API to send push notifications because Firebase console does not have all the functionalities. **Pay attention to the payload example in order to use the plugin properly**.  
 You can also test your notifications with the free testing server: https://cordova-plugin-fcm.appspot.com
 
+#### How it works
+Send a push notification to a single device or topic.
+- 1.a Application is in foreground:
+ - The user receives the notification data in the JavaScript callback without notification alert message (this is the normal behaviour of mobile push notifications).
+- 1.b Application is in background:
+ - The user receives the notification message in its device notification bar.
+ - The user taps the notification and the application is opened.
+ - The user receives the notification data in the JavaScript callback.
+
 #### Get token
 
 ```javascript
@@ -72,7 +81,7 @@ FCMPlugin.getToken(
 FCMPlugin.subscribeToTopic('topicExample');
 ```
 
-####Unsubscribe from topic
+#### Unsubscribe from topic
 
 ```javascript
 // FCMPlugin.unsubscribeFromTopic( topic, successCallback(msg), errorCallback(err) );
@@ -90,11 +99,11 @@ FCMPlugin.unsubscribeFromTopic('topicExample');
 // On device ready...
 FCMPlugin.onNotification(
   function(data){
-    if(data.wasTapped){
-      //Notification was received on device tray (background) and tapped by the user.
+    if (data.wasTapped) {
+      // Notification was received on device tray (background) and tapped by the user.
       alert( JSON.stringify(data) );
-    }else{
-      //Notification was received in foreground. Maybe the user needs to be notified.
+    } else {
+      // Notification was received in foreground. Maybe the user needs to be notified.
       alert( JSON.stringify(data) );
     }
   },
@@ -111,40 +120,32 @@ FCMPlugin.onNotification(
 Full documentation: https://firebase.google.com/docs/cloud-messaging/http-server-ref  
 Free testing server: https://cordova-plugin-fcm.appspot.com
 ```javascript
-//POST: https://fcm.googleapis.com/fcm/send
-//HEADER: Content-Type: application/json
-//HEADER: Authorization: key=AIzaSy*******************
+// POST: https://fcm.googleapis.com/fcm/send
+// HEADER: Content-Type: application/json
+// HEADER: Authorization: key=AIzaSy*******************
 {
   "notification":{
-    "title":"Notification title",  //Any value
-    "body":"Notification body",  //Any value
-    "sound":"default", //If you want notification sound
-    "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-    "icon":"fcm_push_icon"  //White icon Android resource
+    "title":"Notification title",  // Any value
+    "body":"Notification body",  // Any value
+    "sound":"default", // If you want notification sound
+    "click_action":"FCM_PLUGIN_ACTIVITY",  // Must be present for Android
+    "icon":"fcm_push_icon"  // White icon Android resource
   },
   "data":{
-    "param1":"value1",  //Any data to be retrieved in the notification callback
+    "param1":"value1",  // Any data to be retrieved in the notification callback
     "param2":"value2"
   },
-    "to":"/topics/topicExample", //Topic or single device
-    "priority":"high", //If not set, notification won't be delivered on completely closed iOS app
-    "restricted_package_name":"" //Optional. Set for application filtering
+    "to":"/topics/topicExample", // Topic or single device
+    "priority":"high", // If not set, notification won't be delivered on completely closed iOS app
+    "restricted_package_name":"" // Optional. Set for application filtering
 }
 ```
-#### How it works
-Send a push notification to a single device or topic.
-- 1.a Application is in foreground:
- - The user receives the notification data in the JavaScript callback without notification alert message (this is the normal behaviour of mobile push notifications).
-- 1.b Application is in background:
- - The user receives the notification message in its device notification bar.
- - The user taps the notification and the application is opened.
- - The user receives the notification data in the JavaScript callback'.
 
 ## Phone Auth
 
-You can use this plugin to request an SMS code to be sent to a given phone number. You can then use this code in conjuction with the verification ID returned from the plugin to authenticate on the javascript side.
+You can use this plugin to request an SMS code to be sent to a given phone number. You can then use this code in conjunction with the verification ID returned from the plugin to authenticate on the javascript side.
 
-In some cases, Android may do instant verification or auto-retrieval. In those cases, we return a token instead of a verification ID.
+In some cases, Android may do instant verification or auto-retrieval by reading the incoming SMS. In those cases, we sign-in natively and return the user token instead of a verification ID.
 
 #### Verifying a phone number
 Calling FCMPlugin.getVerificationID will return an object containing either `id` or `token`.
@@ -172,7 +173,7 @@ FCMPlugin.getVerificationID('+19025551234' // user's phone number
 );
 ```
 
-##License
+## License
 ```
 The MIT License
 
